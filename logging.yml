@@ -1,10 +1,10 @@
 --- # This is a nice logging config for slack hooks in yaml
 
 version: 1
-disable_existing_loggers: True
+disable_existing_loggers: False
 formatters:
     simple:
-        format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        format: '%(asctime)s - %(message)s'
 handlers:
     console_handler:
         class: logging.StreamHandler
@@ -19,16 +19,16 @@ handlers:
         maxBytes: 10485760
         backupCount: 20
         encoding: utf8
-    info_slack:
-        class: slack_handler.SlackHandler
+    info_slack_handler:
+        class: slack_logging_handler.SlackHandler
         level: INFO
         formatter: simple
-        hook_url: 'https://hooks.slack.com/services/'
-    error_slack:
-        class: slack_handler.SlackHandler
+        hook_url: 'https://hooks.slack.com/services/qwerty/qwertyqwerty'
+    error_slack_handler:
+        class: slack_logging_handler.SlackHandler
         level: ERROR
         formatter: simple
-        hook_url: 'https://hooks.slack.com/services/'
+        hook_url: 'https://hooks.slack.com/services/qwerty2/qwertyqwerty2'
 loggers:
     default:
         level: ERROR
@@ -36,4 +36,8 @@ loggers:
         propagate: no
 root:
     level: DEBUG
-    handlers: [console_handler, info_slack, error_slack]
+    handlers:
+        - console_handler
+        - debug_file_handler
+        - info_slack_handler
+        - error_slack_handler

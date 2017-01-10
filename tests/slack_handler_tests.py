@@ -1,33 +1,28 @@
 """
 Tests for slack_handler module
-
-To run the tests, add a slack hook url to HOOK_URL
 """
 # pylint: disable=missing-docstring, import-error, wildcard-import
 # pylint: disable=attribute-defined-outside-init,unused-wildcard-import, no-init
 import logging
 import json
+import os
 
 from nose.tools import *
 
-from slack_handler.slack_handler import (
-    SlackHandler, color_picker, build_logger
-    )
-
-
-HOOK_URL = ''
-
-logger = logging.getLogger("Slack Logging Test")
-handler = SlackHandler(HOOK_URL)
-fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-handler.setFormatter(logging.Formatter(fmt))
-logger.addHandler(handler)
-logger.setLevel(logging.DEBUG)
+from slack_logging_handler import *
 
 
 class TestSlackHandler(object):
     def setup(self):
         print('SETUP!')
+        logger = logging.getLogger("Slack Logging Test")
+        base_url = 'https://hooks.slack.com/services'
+        hook_id = os.environ.get('SLACK_HOOK_TOKEN')
+        handler = SlackHandler(base_url + hook_id)
+        fmt = '%(asctime)s - %(message)s'
+        handler.setFormatter(logging.Formatter(fmt))
+        logger.addHandler(handler)
+        logger.setLevel(logging.DEBUG)
         self.logger = logger
         self.handler = handler
 
@@ -76,7 +71,7 @@ class TestSlackHandler(object):
     def test_basic(self):
         self.logger.debug("This is a basic test of the slack logging module.")
         response = self.handler.flush()
-        eq_(response.status_code, 200)
+        eq_(response, 'ok')
 
     def test_multiline(self):
         eq_(self.handler.buffer, [])
@@ -84,7 +79,7 @@ class TestSlackHandler(object):
         for x in range(10):
             self.logger.debug('Test %d' % x)
         response = self.handler.flush()
-        eq_(response.status_code, 200)
+        eq_(response, 'ok')
         self.handler._clear_buffer()
         eq_(self.handler.buffer, [])
 
@@ -129,14 +124,14 @@ class TestSlackHandler(object):
         self.logger.info('This is a warning.')
         self.logger.warning('Watch out for Godzilla.')
         response = self.handler.flush()
-        assert 'warning' in response.request.body
+        eq_(response, 'ok')
 
     def test_error(self):
         self.logger.info('This will be an error message!')
         self.logger.error('Oh no GODZILLA!')
         self.logger.error("HE'S ATTACKING THE CITY!")
         response = self.handler.flush()
-        assert 'danger' in response.request.body
+        eq_(response, 'ok')
 
     def test_build_logger(self):
         # tests the build_logger convenience function
@@ -144,6 +139,6 @@ class TestSlackHandler(object):
         ok_(logger)
 
     def test_lazy_join(self):
-        self.logger.info('We also need to test:  %s', 'lazy argument parsing!')
+        self.logger.info('We also need to test... %s', 'lazy argument parsing!')
         response = self.handler.flush()
-        ok_(response)
+        eq_(response, 'ok')

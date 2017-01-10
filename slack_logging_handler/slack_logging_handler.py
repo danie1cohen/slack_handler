@@ -2,11 +2,22 @@
 A Python logging handler that integrates with slack.
 """
 from logging.handlers import BufferingHandler
-import json
 from collections import OrderedDict
+import json
 import logging
 
-import requests
+try:
+    from urllib.parse import urlencode
+except ImportError:
+    from urllib import urlencode
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
+try:
+    from urllib.request import Request
+except ImportError:
+    from urllib2 import Request
 
 
 class SlackHandler(BufferingHandler):
@@ -82,8 +93,7 @@ class SlackHandler(BufferingHandler):
         self.acquire()
         try:
             if self.format_buffer():
-                #raise Exception
-                response = requests.post(self.hook_url, data=self.payload)
+                response = self._post()
         finally:
             self.release()
         self._clear_buffer()
@@ -94,6 +104,12 @@ class SlackHandler(BufferingHandler):
             self.flush()
         finally:
             super(SlackHandler, self).close()
+
+    def _post(self):
+        """Sends the post request."""
+        r = Request(self.hook_url, urlencode(self.payload).encode())
+        return urlopen(r).read().decode()
+
 
 def color_picker(levels):
     """
