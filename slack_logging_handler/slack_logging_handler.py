@@ -6,17 +6,17 @@ from collections import OrderedDict
 import json
 import logging
 
-try:
+try: # pragma: no cover
     from urllib.parse import urlencode
-except ImportError:
+except ImportError: # pragma: no cover
     from urllib import urlencode
-try:
+try: # pragma: no cover
     from urllib.request import urlopen
-except ImportError:
+except ImportError: # pragma: no cover
     from urllib2 import urlopen
-try:
+try: # pragma: no cover
     from urllib.request import Request
-except ImportError:
+except ImportError: # pragma: no cover
     from urllib2 import Request
 
 
