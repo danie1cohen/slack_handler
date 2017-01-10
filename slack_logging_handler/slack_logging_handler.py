@@ -24,7 +24,7 @@ class SlackHandler(BufferingHandler):
     """
     Buffers logs and finally flushes them to a slack hook.
     """
-    def __init__(self, hook_url, capacity=14):
+    def __init__(self, hook_url, capacity=10000):
         """
         Initializes this object.
         """

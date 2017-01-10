@@ -12,23 +12,24 @@ from nose.tools import *
 from slack_logging_handler import *
 
 
+logger = logging.getLogger("Slack Logging Test")
+handler = SlackHandler(os.environ['SLACK_HOOK_URL'])
+
+# we recommend a minimal logger format for slack messages
+fmt = '%(asctime)s - %(message)s'
+handler.setFormatter(logging.Formatter(fmt))
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
+
+
 class TestSlackHandler(object):
     def setup(self):
         print('SETUP!')
-        logger = logging.getLogger("Slack Logging Test")
-        base_url = 'https://hooks.slack.com/services'
-        hook_id = os.environ.get('SLACK_HOOK_TOKEN')
-        handler = SlackHandler(base_url + hook_id)
-        fmt = '%(asctime)s - %(message)s'
-        handler.setFormatter(logging.Formatter(fmt))
-        logger.addHandler(handler)
-        logger.setLevel(logging.DEBUG)
         self.logger = logger
         self.handler = handler
 
     def teardown(self):
         print('TEAR DOWN!')
-        #self.handler._clear_buffer()
         self.handler.close()
 
     @raises(ValueError)
@@ -135,7 +136,7 @@ class TestSlackHandler(object):
 
     def test_build_logger(self):
         # tests the build_logger convenience function
-        logger = build_logger(base_url)
+        logger = build_logger('https://hooks.slack.com/services/foo/bar')
         ok_(logger)
 
     def test_lazy_join(self):
