@@ -1,9 +1,15 @@
+[![Build Status](https://travis-ci.org/danie1cohen/slack_logging_handler.svg?branch=master)
+
 Slack Handler
 =============
 
 This module provides a logging handler that takes a slack hook url as its first
 argument. Logs sent to that handler are then buffered and passed to the slack
 channel attached to that hook.
+
+Installation
+------------
+    pip install slack_logging_handler
 
 
 Usage
@@ -13,7 +19,7 @@ Where hook_url is the slack generated url for your bot.
 
     import logging
 
-    from slack_handler import SlackHandler
+    from slack_logging_handler import SlackHandler
 
     logger = logging.getLogger(__name__)
     handler = SlackHandler('https://hooks.slack.com/services/12354blahblah/asd')
