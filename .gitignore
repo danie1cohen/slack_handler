@@ -1,0 +1,37 @@
+# temp
+*~
+*.pyc
+.DS_Store
+Thumbs.db
+.coverage
+.ipynb_checkpoints
+.vagrant
+__pycache__
+
+# ignore autoenv
+.env
+
+# logs
+*.log
+
+# dbs
+db.sqlite3
+*.p
+
+# package files
+build
+dist
+*.egg-info
+
+# conf
+settings.py
+.coverage
+
+# static
+*.txt
+*.jpg
+*.png
+*.mp3
+*.wav
+!requirements.txt
+cover
