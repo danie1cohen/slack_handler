@@ -8,6 +8,7 @@ Thumbs.db
 .ipynb_checkpoints
 .vagrant
 __pycache__
+cover
 
 # ignore autoenv
 .env
