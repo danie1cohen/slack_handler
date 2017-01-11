@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/danie1cohen/slack_logging_handler.svg?branch=master)
+![Build Status](https://travis-ci.org/danie1cohen/slack_logging_handler.svg?branch=master)
 
 Slack Handler
 =============
