@@ -68,5 +68,5 @@ Where hook_url is the slack generated url for your bot.
 Tests
 -----
 To run the tests, define an environment variable with the token for your slack
-hook as SLACK_HOOK_TOKEN. Test message will be sent to that channel during
+hook as SLACK_HOOK_URL. Test message will be sent to that channel during
 testing.
