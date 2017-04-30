@@ -1,15 +1,16 @@
 """
 Tests for slack_handler module
 """
-# pylint: disable=missing-docstring, import-error, wildcard-import
-# pylint: disable=attribute-defined-outside-init,unused-wildcard-import, no-init
+#pylint: disable=missing-docstring,import-error,wildcard-import,no-self-use
+#pylint: disable=attribute-defined-outside-init,unused-wildcard-import,no-init
+#pylint: disable=protected-access,broad-except
 import logging
 import json
 import os
 
 from nose.tools import *
 
-from slack_logging_handler import *
+from slack_logging_handler import SlackHandler, color_picker, build_logger
 
 
 logger = logging.getLogger("Slack Logging Test")
@@ -34,7 +35,7 @@ class TestSlackHandler(object):
 
     @raises(ValueError)
     def test_hook_url(self):
-        new_handler = SlackHandler('http://www.google.com')
+        SlackHandler('http://www.google.com')
 
     def test_clear_buffer(self):
         eq_(self.handler.buffer, [])
@@ -78,7 +79,7 @@ class TestSlackHandler(object):
         eq_(self.handler.buffer, [])
         self.logger.debug('This is a test of of multi-line slack logging.')
         for x in range(10):
-            self.logger.debug('Test %d' % x)
+            self.logger.debug('Test %d', x)
         response = self.handler.flush()
         eq_(response, 'ok')
         self.handler._clear_buffer()
@@ -136,10 +137,20 @@ class TestSlackHandler(object):
 
     def test_build_logger(self):
         # tests the build_logger convenience function
-        logger = build_logger('https://hooks.slack.com/services/foo/bar')
-        ok_(logger)
+        l = build_logger('https://hooks.slack.com/services/foo/bar')
+        ok_(l)
 
     def test_lazy_join(self):
         self.logger.info('We also need to test... %s', 'lazy argument parsing!')
         response = self.handler.flush()
+        eq_(response, 'ok')
+
+    def test_token(self):
+        token = os.environ['SLACK_HOOK_URL'].replace(self.handler.host, '')
+        new_handler = SlackHandler(token=token)
+        l = logging.getLogger('Tokenlogger')
+        l.addHandler(new_handler)
+        l.info('This works with just a token too!.')
+        print(l.handlers)
+        response = new_handler.flush()
         eq_(response, 'ok')

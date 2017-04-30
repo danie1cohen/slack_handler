@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-
+"""
+setuptools configuration for slack_logging_handler
+"""
 try:
     from setuptools import setup
 except ImportError:
@@ -11,7 +13,7 @@ config = {
     'url': 'https://github.com/danie1cohen/slack_logging_handler',
     'download_url': 'https://github.com/danie1cohen/slack_logging_handler/tarball/0.1.10',
     'author_email': 'daniel.o.cohen@gmail.com',
-    'version': '0.1.10',
+    'version': '0.1.11',
     'install_requires': [],
     'packages': ['slack_logging_handler'],
     'scripts': [],

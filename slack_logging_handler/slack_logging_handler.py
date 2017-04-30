@@ -24,13 +24,17 @@ class SlackHandler(BufferingHandler):
     """
     Buffers logs and finally flushes them to a slack hook.
     """
-    def __init__(self, hook_url, capacity=10000):
+    def __init__(self, hook_url=None, token=None, capacity=10000):
         """
         Initializes this object.
         """
-        host = 'https://hooks.slack.com'
-        if host not in hook_url:
+        host = 'https://hooks.slack.com/services/'
+
+        if hook_url is not None and host not in hook_url:
             raise ValueError('Hook url must start with %s' % host)
+
+        if hook_url is None and token is not None:
+            hook_url = host + token
 
         self.hook_url = hook_url
         self.capacity = capacity
