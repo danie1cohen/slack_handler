@@ -4,6 +4,7 @@ Tests for slack_handler module
 #pylint: disable=missing-docstring,import-error,wildcard-import,no-self-use
 #pylint: disable=attribute-defined-outside-init,unused-wildcard-import,no-init
 #pylint: disable=protected-access,broad-except
+from __future__ import print_function
 import logging
 import json
 import os
