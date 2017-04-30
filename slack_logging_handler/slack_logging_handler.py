@@ -36,6 +36,7 @@ class SlackHandler(BufferingHandler):
         if hook_url is None and token is not None:
             hook_url = host + token
 
+        self.host = host
         self.hook_url = hook_url
         self.capacity = capacity
         self._clear_buffer()
