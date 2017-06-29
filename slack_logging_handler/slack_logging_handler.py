@@ -1,10 +1,11 @@
 """
 A Python logging handler that integrates with slack.
 """
-from logging.handlers import BufferingHandler
 from collections import OrderedDict
 import json
 import logging
+from logging.handlers import BufferingHandler
+import os
 
 try: # pragma: no cover
     from urllib.parse import urlencode
@@ -24,17 +25,21 @@ class SlackHandler(BufferingHandler):
     """
     Buffers logs and finally flushes them to a slack hook.
     """
-    def __init__(self, hook_url=None, token=None, capacity=10000):
+    def __init__(self, hook_url=None, token=None, env_token=None,
+                 capacity=10000):
         """
         Initializes this object.
         """
         host = 'https://hooks.slack.com/services/'
 
-        if hook_url is not None and host not in hook_url:
-            raise ValueError('Hook url must start with %s' % host)
-
         if hook_url is None and token is not None:
             hook_url = host + token
+        elif hook_url is None and env_token is not None:
+            hook_url = host + os.environ.get(env_token, None)
+
+        # validate the hook url is set up correctly
+        if hook_url is not None and host not in hook_url:
+            raise ValueError('Hook url must start with %s' % host)
 
         self.host = host
         self.hook_url = hook_url
