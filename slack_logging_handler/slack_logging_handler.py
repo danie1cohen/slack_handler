@@ -33,9 +33,9 @@ class SlackHandler(BufferingHandler):
         """
         host = 'https://hooks.slack.com/services/'
 
-        if hook_url is None and token is not None:
+        if token and not hook_url:
             hook_url = host + token
-        elif hook_url is None and env_token is not None:
+        elif env_token and not hook_url:
             hook_url = host + os.environ.get(env_token)
 
         # validate the hook url is set up correctly
