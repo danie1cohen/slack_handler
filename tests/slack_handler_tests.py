@@ -190,5 +190,5 @@ class TestSlackHandler(object):
                 'handlers': ['slack_handler']
             }
         }
-        cfg = logging.config.dictConfig(config)
-        ok_(cfg)
+        logging.config.dictConfig(config)
+        ok_(True)
