@@ -181,7 +181,7 @@ class TestSlackHandler(object):
             'loggers': {
                 'default': {
                     'level': 'ERROR',
-                    'handlers': 'slack_handler',
+                    'handlers': ['slack_handler'],
                     'propagate': False
                 }
             },
