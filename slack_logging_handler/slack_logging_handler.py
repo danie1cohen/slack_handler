@@ -26,8 +26,6 @@ class SlackHandler(BufferingHandler):
     """
     Buffers logs and finally flushes them to a slack hook.
     """
-    name = 'SlackHandler'
-    filters = []
     def __init__(self, hook_url=None, token=None, env_token=None,
                  capacity=10000):
         """
@@ -45,16 +43,13 @@ class SlackHandler(BufferingHandler):
         if hook_url is not None and host not in hook_url:
             raise ValueError('Hook url must start with %s' % host)
         elif hook_url is None:
-            warnings.warn('No hook url has been provided. Using NullHandler')
-            self = logging.NullHandler()
-            self.name = '<SlackHandler <NullHandler>>'
-            self.filters = []
-        else:
-            self.host = host
-            self.hook_url = hook_url
-            self.capacity = capacity
-            self._clear_buffer()
-            super(SlackHandler, self).__init__(capacity=capacity)
+            warnings.warn('No hook url has been provided. Will do nothing.')
+
+        self.host = host
+        self.hook_url = hook_url
+        self.capacity = capacity
+        self._clear_buffer()
+        super(SlackHandler, self).__init__(capacity=capacity)
 
     def parse_data(self):
         """
@@ -109,13 +104,16 @@ class SlackHandler(BufferingHandler):
     def flush(self):
         """Sends the buffered logs out to slack hook."""
         response = None
-        self.acquire()
-        try:
-            if self.format_buffer():
-                response = self._post()
-        finally:
-            self.release()
-        self._clear_buffer()
+        if self.hook_url is None:
+            self._clear_buffer()
+        else:
+            self.acquire()
+            try:
+                if self.format_buffer():
+                    response = self._post()
+            finally:
+                self.release()
+            self._clear_buffer()
         return response
 
     def close(self):
@@ -148,9 +146,12 @@ def color_picker(levels):
             return key, val
     return levels[0], 'good'
 
-def build_logger(hook_url, level=logging.DEBUG,
-                 fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s'):
-    """Builds a logger for you with a SlackHandler and sensible defaults."""
+DEFAULT_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+def build_logger(hook_url, level=logging.DEBUG, fmt=DEFAULT_FORMAT):
+    """
+    Builds a logger for you with a SlackHandler and sensible defaults.
+    """
     logger = logging.getLogger(__name__)
     handler = SlackHandler(hook_url)
     handler.setFormatter(logging.Formatter(fmt))
