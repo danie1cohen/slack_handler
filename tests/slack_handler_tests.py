@@ -172,21 +172,21 @@ class TestSlackHandler(object):
             },
             'handlers': {
                 'slack_handler': {
-                    'class': SlackHandler,
-                    'level': logging.WARNING,
+                    'class': 'slack_logging_handler.SlackHandler',
+                    'level': 'WARNING',
                     'env_token': 'SOME_TOKEN',
                     'capacity': 1
                 }
             },
             'loggers': {
                 'default': {
-                    'level': logging.ERROR,
+                    'level': 'ERROR',
                     'handlers': 'slack_handler',
                     'propagate': False
                 }
             },
             'root': {
-                'level': logging.DEBUG,
+                'level': 'DEBUG',
                 'handlers': ['slack_handler']
             }
         }
