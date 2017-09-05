@@ -158,4 +158,4 @@ class TestSlackHandler(object):
 
     def test_null(self):
         hand = SlackHandler()
-        eq_(type(hand), logging.NullHandler)
+        ok_(hand)
