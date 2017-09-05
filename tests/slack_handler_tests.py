@@ -6,6 +6,7 @@ Tests for slack_handler module
 #pylint: disable=protected-access,broad-except,too-many-public-methods
 from __future__ import print_function
 import logging
+import logging.config
 import json
 import os
 
@@ -159,3 +160,35 @@ class TestSlackHandler(object):
     def test_null(self):
         hand = SlackHandler()
         ok_(hand)
+
+    def test_null_dict_config(self):
+        config = {
+            'version': 1,
+            'disable_existing_loggers': False,
+            'formatters': {
+                'simple': {
+                    'format': '%(asctime)s - %(message)s'
+                }
+            },
+            'handlers': {
+                'slack_handler': {
+                    'class': SlackHandler,
+                    'level': logging.WARNING,
+                    'env_token': 'SOME_TOKEN',
+                    'capacity': 1
+                }
+            },
+            'loggers': {
+                'default': {
+                    'level': logging.ERROR,
+                    'handlers': 'slack_handler',
+                    'propagate': False
+                }
+            },
+            'root': {
+                'level': logging.DEBUG,
+                'handlers': ['slack_handler']
+            }
+        }
+        cfg = logging.config.dictConfig(config)
+        ok_(cfg)
