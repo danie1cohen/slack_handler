@@ -44,12 +44,12 @@ class SlackHandler(BufferingHandler):
         elif hook_url is None:
             warnings.warn('No hook url has been provided. Using NullHandler')
             self = logging.NullHandler()
-
-        self.host = host
-        self.hook_url = hook_url
-        self.capacity = capacity
-        self._clear_buffer()
-        super(SlackHandler, self).__init__(capacity=capacity)
+        else:
+            self.host = host
+            self.hook_url = hook_url
+            self.capacity = capacity
+            self._clear_buffer()
+            super(SlackHandler, self).__init__(capacity=capacity)
 
     def parse_data(self):
         """
