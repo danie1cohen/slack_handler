@@ -26,6 +26,8 @@ class SlackHandler(BufferingHandler):
     """
     Buffers logs and finally flushes them to a slack hook.
     """
+    name = 'SlackHandler'
+    filters = []
     def __init__(self, hook_url=None, token=None, env_token=None,
                  capacity=10000):
         """
@@ -46,6 +48,7 @@ class SlackHandler(BufferingHandler):
             warnings.warn('No hook url has been provided. Using NullHandler')
             self = logging.NullHandler()
             self.name = '<SlackHandler <NullHandler>>'
+            self.filters = []
         else:
             self.host = host
             self.hook_url = hook_url
