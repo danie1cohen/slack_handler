@@ -3,7 +3,7 @@ Tests for slack_handler module
 """
 #pylint: disable=missing-docstring,import-error,wildcard-import,no-self-use
 #pylint: disable=attribute-defined-outside-init,unused-wildcard-import,no-init
-#pylint: disable=protected-access,broad-except
+#pylint: disable=protected-access,broad-except,too-many-public-methods
 from __future__ import print_function
 import logging
 import json
@@ -155,3 +155,7 @@ class TestSlackHandler(object):
         print(l.handlers)
         response = new_handler.flush()
         eq_(response, 'ok')
+
+    def test_null(self):
+        hand = SlackHandler()
+        eq_(type(hand), logging.NullHandler)

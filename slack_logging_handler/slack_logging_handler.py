@@ -6,6 +6,7 @@ import json
 import logging
 from logging.handlers import BufferingHandler
 import os
+import warnings
 
 try: # pragma: no cover
     from urllib.parse import urlencode
@@ -35,11 +36,14 @@ class SlackHandler(BufferingHandler):
         if hook_url is None and token is not None:
             hook_url = host + token
         elif hook_url is None and env_token is not None:
-            hook_url = host + os.environ.get(env_token, None)
+            hook_url = host + os.environ.get(env_token)
 
         # validate the hook url is set up correctly
         if hook_url is not None and host not in hook_url:
             raise ValueError('Hook url must start with %s' % host)
+        elif hook_url is None:
+            warnings.warn('No hook url has been provided. Using NullHandler')
+            return logging.NullHandler()
 
         self.host = host
         self.hook_url = hook_url
