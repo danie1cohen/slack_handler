@@ -44,9 +44,8 @@ class SlackHandler(BufferingHandler):
             raise ValueError('Hook url must start with %s' % host)
         elif hook_url is None:
             warnings.warn('No hook url has been provided. Using NullHandler')
-            name = self._name
             self = logging.NullHandler()
-            self._name = name
+            self._name = '<SlackHandler <NullHandler>>'
         else:
             self.host = host
             self.hook_url = hook_url
