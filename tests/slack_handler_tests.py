@@ -175,6 +175,7 @@ class TestSlackHandler(object):
                     'class': 'slack_logging_handler.SlackHandler',
                     'level': 'WARNING',
                     'env_token': 'SOME_TOKEN',
+                    'formatter': 'simple',
                     'capacity': 1
                 }
             },
